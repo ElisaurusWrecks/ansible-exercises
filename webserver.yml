@@ -1,0 +1,41 @@
+---
+- name: Configure webserver
+  hosts: all
+
+  tasks: 
+  - name: Ensure Apache Webserver is installed
+    become: yes
+    ansible.builtin.package:
+      name: httpd
+      state: present
+  - name: Start service httpd, if not started
+    become: yes
+    ansible.builtin.service:
+      name: httpd
+      state: started
+  # - name: Enable Port 80 
+  #   amazon.aws.ec2_group: 
+  #     name: "{{ subnut }}"
+  #     description: Security Group enabling Port 80 
+  #     vpc_id: vpc-0fcfc6cfc04ce4f48
+  #     # profile: "{{ aws_profile }}"
+  #     region: us-east-2
+  #     rules: 
+  #       - proto: tcp 
+  #         ports:
+  #         - 80
+  #         cidr_ip: 0.0.0.0/0
+  #         rule_desc: Allow all on Port 80
+  - name: Copy the HTML file
+    become: yes
+    ansible.builtin.copy:
+      src: './rsc/index.html'
+      dest: '{{ html_file_path }}'
+      owner: '{{ ansible_env.USER }}'
+      group: '{{ ansible_env.USER }}'
+      mode: '0644'
+  - name: Add line to HTML file
+    become: yes
+    ansible.builtin.lineinfile: 
+      path: '{{ html_file_path }}'
+      line: '{{ html_var }}'
