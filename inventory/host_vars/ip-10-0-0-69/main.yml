@@ -5,4 +5,4 @@ test_var: 'Test value'
 html_file_path: '/home/{{ ansible_env.USER }}/index.html'
 html_var: 'such ansible, very script, wow'
 
-secret_variable: '{{ vault_secret_variable }}''
+secret_variable: '{{ vault_secret_variable }}'
